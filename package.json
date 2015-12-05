@@ -1,0 +1,18 @@
+{
+  "name": "ngDrive-demo",
+  "version": "0.1.9",
+  "dependencies": {},
+  "devDependencies": {
+    "bower": "^1.4.1"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinoyyid/ngDrive-demo.git"
+  }
+}
