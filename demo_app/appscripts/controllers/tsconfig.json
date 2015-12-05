@@ -21,8 +21,6 @@
         "rewriteTsconfig": true
     },
     "files": [
-        "maximal_c.ts",
-        "maximal_gdoc_c.ts",
-        "paranoid_c.ts"
+        "maximal_c.ts"
     ]
 }

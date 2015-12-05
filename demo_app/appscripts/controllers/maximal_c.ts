@@ -1,27 +1,27 @@
-/// <reference path="../../../definitely_typed/angular/angular.d.ts"/>
-/// <reference path="../../../src/nggapi_ts_declaration_files/drive_interfaces.d.ts"/>
+/// <reference path="../../../typings/angularjs/angular.d.ts"/>
+/// <reference path="../../../bower_components/ngDrive/ngdrive_ts_declaration_files/drive_interfaces.d.ts"/>
 
 class MaximalCtrl1 {
   sig = 'MaximalCtrl';
 
   // an array of steps to display
-  steps = [];
+  steps: Array<any> = [];
 
   email = "";
 
   // a current file (the last inserted) that most functions will operate on
-  currentFile: NgGapi.IDriveFile;
-  currentFolder: NgGapi.IDriveFile;
-  currentPermission: NgGapi.IDrivePermission;
-  currentRevision: NgGapi.IDriveRevision;
+  currentFile: ngDrive.IDriveFile;
+  currentFolder: ngDrive.IDriveFile;
+  currentPermission: ngDrive.IDrivePermission;
+  currentRevision: ngDrive.IDriveRevision;
   largestChangeId = 0;
   currentStepImage = '';
 
-  fileButton;           // model of input type=file button
+  fileButton:any;           // model of input type=file button
 
   static $inject = ['$scope', '$log', '$q', 'DriveService'];
 
-  constructor(private $scope, private $log: ng.ILogService, private $q: ng.IQService, private DriveService: NgGapi.IDriveService) {
+  constructor(private $scope, private $log: ng.ILogService, private $q: ng.IQService, private DriveService: ngDrive.IDriveService) {
     $scope.vm = this;
 
     window['DS'] = this.DriveService;
@@ -48,7 +48,7 @@ class MaximalCtrl1 {
         mimeType: files[0].type
       }, { uploadType: 'resumable' }, content, undefined).promise.then(
         // success
-        (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+        (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
           this.currentStepImage = resp.data.id + ' , content length = ' + resp.data.fileSize;
           this.currentFile = resp.data;
         },
@@ -202,7 +202,7 @@ class MaximalCtrl1 {
 	 *
 	 * @returns {mng.IPromise<{data: IDriveAbout}>} The promise for chaining
 	 */
-  getAbout(): ng.IPromise<NgGapi.IDriveAbout> {
+  getAbout(): ng.IPromise<ngDrive.IDriveAbout> {
     // create a step object containing what we're about to do
     var currentStep = { op: 'Getting about', status: '...', data: undefined };
     // push that step object onto the list which is displayed via an ng-repeat
@@ -210,7 +210,7 @@ class MaximalCtrl1 {
     // do the get, storing its ResponseObject in ro
     var ro = this.DriveService.about.get({ includeSubscribed: true });
     // create a then function on ro which will execute on completion
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveAbout>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveAbout>) => {
       // update the display with the status and response data
       currentStep.status = 'done';
       currentStep.data = resp.data.user + ' change id=' + resp.data.largestChangeId;
@@ -226,7 +226,7 @@ class MaximalCtrl1 {
 	 *
 	 * @returns {mng.IPromise<{data: IDriveAbout}>} The promise for chaining
 	 */
-  listChanges(id: number): ng.IPromise<NgGapi.IDriveChange> {
+  listChanges(id: number): ng.IPromise<ngDrive.IDriveChange> {
     // create a step object containing what we're about to do
     var currentStep = { op: 'Listing changes ', status: '...', data: undefined };
     // push that step object onto the list which is displayed via an ng-repeat
@@ -248,7 +248,7 @@ class MaximalCtrl1 {
 	 *
 	 * @returns {mng.IPromise<{data: IDriveAbout}>} The promise for chaining
 	 */
-  getChange(id: number): ng.IPromise<NgGapi.IDriveChange> {
+  getChange(id: number): ng.IPromise<ngDrive.IDriveChange> {
     // create a step object containing what we're about to do
     var currentStep = { op: 'Getting change ' + id, status: '...', data: undefined };
     // push that step object onto the list which is displayed via an ng-repeat
@@ -256,7 +256,7 @@ class MaximalCtrl1 {
     // do the get, storing its ResponseObject in ro
     var ro = this.DriveService.changes.get({ changeId: id });
     // create a then function on ro which will execute on completion
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveChange>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveChange>) => {
       // update the display with the status and response data
       currentStep.status = 'done';
       currentStep.data = ' change id=' + resp.data.id;
@@ -276,7 +276,7 @@ class MaximalCtrl1 {
 	 * @param id  The file ID
 	 * @returns {mng.IPromise<{data: IDriveFile}>} The promise for chaining
 	 */
-  getFile(id: string): ng.IPromise<NgGapi.IDriveFile> {
+  getFile(id: string): ng.IPromise<ngDrive.IDriveFile> {
     // create a step object containing what we're about to do
     var currentStep = { op: 'Getting a file', status: '...', data: undefined };
     // push that step object onto the list which is displayed via an ng-repeat
@@ -284,7 +284,7 @@ class MaximalCtrl1 {
     // do the get, storing its ResponseObject in ro
     var ro = this.DriveService.files.get({ fileId: id });
     // create a then function on ro which will execute on completion
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       // update the display with the status and response data
       currentStep.status = 'done';
       currentStep.data = resp.data.title;
@@ -303,7 +303,7 @@ class MaximalCtrl1 {
 	 * @param count how many files
 	 * @returns {mng.IPromise<{data: IDriveFile}>}
 	 */
-  insertFiles(title: string, count: number): ng.IPromise<NgGapi.IDriveFile> {
+  insertFiles(title: string, count: number): ng.IPromise<ngDrive.IDriveFile> {
     var contentBase = 'content for ';
     var doneCount = 0;
     var currentStep = { op: 'Inserting ' + count + ' files', status: '' + doneCount, data: undefined };
@@ -316,7 +316,7 @@ class MaximalCtrl1 {
         title: title + '-' + i,
         mimeType: 'text/plain'
       }, { uploadType: 'multipart' }, btoa(contentBase + title + '-' + i), 'base64').promise.then(
-        (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+        (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
           currentStep.status = '' + ++doneCount;
           currentStep.data = resp.data.id + ' , content length = ' + resp.data.fileSize;
           this.currentFile = resp.data;
@@ -337,7 +337,7 @@ class MaximalCtrl1 {
    * @param title stub of the title
    * @returns {mng.IPromise<{data: IDriveFile}>}
    */
-  resumable(title: string): ng.IPromise<NgGapi.IDriveFile> {
+  resumable(title: string): ng.IPromise<ngDrive.IDriveFile> {
     var content = '123456789.';
     for (var i = 1; i < 16; i++) {
       content += content;
@@ -359,7 +359,7 @@ class MaximalCtrl1 {
       title: title,
       mimeType: 'text/plain'
     }, { uploadType: 'resumable' }, content, transferEncoding).promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.data = resp.data.id + ' , content length = ' + resp.data.fileSize;
         this.currentFile = resp.data;
       }
@@ -384,95 +384,95 @@ class MaximalCtrl1 {
     return ro.promise;
   }
 
-  patchFileTitle(id: string, newTitle: string): ng.IPromise<NgGapi.IDriveFile> {
+  patchFileTitle(id: string, newTitle: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Using Patch to update a file\'s title', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.patch({
       fileId: id,
       resource: { title: newTitle }
     });
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       currentStep.status = 'done';
       currentStep.data = resp.data.title;
     });
     return ro.promise;
   }
 
-  updateFileTitle(id: string, newTitle: string): ng.IPromise<NgGapi.IDriveFile> {
+  updateFileTitle(id: string, newTitle: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Using Update to update a file\'s title', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.update({ title: newTitle }, { fileId: id });
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       currentStep.status = 'done';
       currentStep.data = resp.data.title;
     });
     return ro.promise;
   }
 
-  updateFileContent(id: string, newContent: string): ng.IPromise<NgGapi.IDriveFile> {
+  updateFileContent(id: string, newContent: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Using Update to update a file\'s content', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.update(undefined, {
       fileId: id,
       uploadType: 'media'
     }, newContent);
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       currentStep.status = 'done';
       currentStep.data = 'content length = ' + resp.data.fileSize;
     });
     return ro.promise;
   }
 
-  touchFile(id: string): ng.IPromise<NgGapi.IDriveFile> {
+  touchFile(id: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Using Touch to update a file\'s last modified date', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.touch({ fileId: id });
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       currentStep.status = 'done';
       currentStep.data = resp.data.modifiedDate;
     });
     return ro.promise;
   }
 
-  trashFile(id: string): ng.IPromise<NgGapi.IDriveFile> {
+  trashFile(id: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Trash a file', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.trash({ fileId: id });
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       currentStep.status = 'done';
       currentStep.data = 'trashed=' + resp.data.labels.trashed;
     });
     return ro.promise;
   }
 
-  untrashFile(id: string): ng.IPromise<NgGapi.IDriveFile> {
+  untrashFile(id: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Untrash a file', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.untrash({ fileId: id });
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       currentStep.status = 'done';
       currentStep.data = 'trashed=' + resp.data.labels.trashed;
     });
     return ro.promise;
   }
 
-  deleteFile(id: string): ng.IPromise<NgGapi.IDriveFile> {
+  deleteFile(id: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Delete a file', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.del({ fileId: id });
-    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+    ro.promise.then((resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
       currentStep.status = 'done';
       currentStep.data = resp.data;
     });
     return ro.promise;
   }
 
-  emptyTrash(): ng.IPromise<NgGapi.IDriveFile> {
+  emptyTrash(): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Empty trash', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.emptyTrash();
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
         currentStep.data = resp.data;
       },
@@ -483,7 +483,7 @@ class MaximalCtrl1 {
     return ro.promise;
   }
 
-  watchFile(id: string): ng.IPromise<NgGapi.IDriveFile> {
+  watchFile(id: string): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Using Watch to get a file\'s update channel', status: '...', data: undefined };
     this.steps.push(currentStep);
     var watchBody = {
@@ -508,7 +508,7 @@ class MaximalCtrl1 {
   }
 
 
-  insertFolder(): ng.IPromise<NgGapi.IDriveFile> {
+  insertFolder(): ng.IPromise<ngDrive.IDriveFile> {
     var currentStep = { op: 'Making a folder', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.files.insert({
@@ -516,7 +516,7 @@ class MaximalCtrl1 {
       mimeType: 'application/vnd.google-apps.folder'
     }, false);
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
         this.currentFolder = resp.data;
       });
@@ -528,52 +528,52 @@ class MaximalCtrl1 {
 	   CHILDREN
 	 */
 
-  insertChild(child: NgGapi.IDriveFile): ng.IPromise<NgGapi.IDriveChild> {
+  insertChild(child: ngDrive.IDriveFile): ng.IPromise<ngDrive.IDriveChild> {
     var currentStep = { op: 'Making a child', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.children.insert({ folderId: this.currentFolder.id }, child);
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
 
-  getChild(): ng.IPromise<NgGapi.IDriveChild> {
+  getChild(): ng.IPromise<ngDrive.IDriveChild> {
     var currentStep = { op: 'Getting a child', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.children.get({ folderId: this.currentFolder.id, childId: this.currentFile.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
 
-  listChildren(): ng.IPromise<NgGapi.IDriveChild> {
+  listChildren(): ng.IPromise<ngDrive.IDriveChild> {
     var currentStep = { op: 'Listing all children', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.children.list({ folderId: this.currentFolder.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveChildList>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveChildList>) => {
         currentStep.status = '' + resp.data.items.length;
       });
     return ro.promise;
   }
 
 
-  deleteChild(): ng.IPromise<NgGapi.IDriveChild> {
+  deleteChild(): ng.IPromise<ngDrive.IDriveChild> {
     var currentStep = { op: 'Deleting a child', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.children.del({ folderId: this.currentFolder.id, childId: this.currentFile.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
@@ -584,52 +584,52 @@ class MaximalCtrl1 {
 	 PARENTS
 	 */
 
-  insertParent(child: NgGapi.IDriveFile): ng.IPromise<NgGapi.IDriveParent> {
+  insertParent(child: ngDrive.IDriveFile): ng.IPromise<ngDrive.IDriveParent> {
     var currentStep = { op: 'Making a parent', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.parents.insert({ fileId: child.id }, this.currentFolder);
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
 
-  getParent(): ng.IPromise<NgGapi.IDriveParent> {
+  getParent(): ng.IPromise<ngDrive.IDriveParent> {
     var currentStep = { op: 'Getting a parent', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.parents.get({ fileId: this.currentFile.id, parentId: this.currentFolder.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
 
-  listParents(): ng.IPromise<NgGapi.IDriveParent> {
+  listParents(): ng.IPromise<ngDrive.IDriveParent> {
     var currentStep = { op: 'Listing all parents', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.parents.list({ fileId: this.currentFile.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveParentList>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveParentList>) => {
         currentStep.status = '' + resp.data.items.length;
       });
     return ro.promise;
   }
 
 
-  deleteParent(): ng.IPromise<NgGapi.IDriveParent> {
+  deleteParent(): ng.IPromise<ngDrive.IDriveParent> {
     var currentStep = { op: 'Deleting a parent', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.parents.del({ fileId: this.currentFile.id, parentId: this.currentFolder.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
@@ -640,74 +640,74 @@ class MaximalCtrl1 {
 	 PERMISSIONS
 	 */
 
-  insertPermission(fileId): ng.IPromise<NgGapi.IDrivePermission> {
+  insertPermission(fileId): ng.IPromise<ngDrive.IDrivePermission> {
     var currentStep = { op: 'Making a permission', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.permissions.insert({ type: 'anyone', role: 'writer' }, { fileId: fileId });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDrivePermission>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDrivePermission>) => {
         currentStep.status = 'done';
         this.currentPermission = resp.data;
       });
     return ro.promise;
   }
 
-  getPermission(): ng.IPromise<NgGapi.IDrivePermission> {
+  getPermission(): ng.IPromise<ngDrive.IDrivePermission> {
     var currentStep = { op: 'Getting a permission', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.permissions.get({ fileId: this.currentFile.id, permissionId: this.currentPermission.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
-  updatePermission(): ng.IPromise<NgGapi.IDrivePermission> {
+  updatePermission(): ng.IPromise<ngDrive.IDrivePermission> {
     var currentStep = { op: 'Updating a permission', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.permissions.update({ type: 'domain', role: 'reader' }, { fileId: this.currentFile.id, permissionId: this.currentPermission.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
-  patchPermission(): ng.IPromise<NgGapi.IDrivePermission> {
+  patchPermission(): ng.IPromise<ngDrive.IDrivePermission> {
     var currentStep = { op: 'Patching a permission', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.permissions.patch({ type: 'domain', role: 'reader' }, { fileId: this.currentFile.id, permissionId: this.currentPermission.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
-  listPermissions(): ng.IPromise<NgGapi.IDrivePermission> {
+  listPermissions(): ng.IPromise<ngDrive.IDrivePermission> {
     var currentStep = { op: 'Listing all permissions for a file', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.permissions.list({ fileId: this.currentFile.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDrivePermissionList>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDrivePermissionList>) => {
         currentStep.status = '' + resp.data.items.length;
       });
     return ro.promise;
   }
 
-  deletePermission(): ng.IPromise<NgGapi.IDrivePermission> {
+  deletePermission(): ng.IPromise<ngDrive.IDrivePermission> {
     var currentStep = { op: 'Deleting a permission', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.permissions.del({ fileId: this.currentFile.id, permissionId: this.currentPermission.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
@@ -724,7 +724,7 @@ class MaximalCtrl1 {
     var ro = this.DriveService.permissions.getIdForEmail(email);
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
@@ -734,62 +734,62 @@ class MaximalCtrl1 {
 	 REVISIONS
 	 */
 
-  getRevision(): ng.IPromise<NgGapi.IDriveRevision> {
+  getRevision(): ng.IPromise<ngDrive.IDriveRevision> {
     var currentStep = { op: 'Getting a revision', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.revisions.get({ fileId: this.currentFile.id, revisionId: this.currentRevision.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
-  updateRevision(): ng.IPromise<NgGapi.IDriveRevision> {
+  updateRevision(): ng.IPromise<ngDrive.IDriveRevision> {
     var currentStep = { op: 'Updating a revision', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.revisions.update({ pinned: false }, { fileId: this.currentFile.id, revisionId: this.currentRevision.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
-  patchRevision(): ng.IPromise<NgGapi.IDriveRevision> {
+  patchRevision(): ng.IPromise<ngDrive.IDriveRevision> {
     var currentStep = { op: 'Patching a revision', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.revisions.patch({ pinned: true }, { fileId: this.currentFile.id, revisionId: this.currentRevision.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
   }
 
-  listRevisions(): ng.IPromise<NgGapi.IDriveRevision> {
+  listRevisions(): ng.IPromise<ngDrive.IDriveRevision> {
     var currentStep = { op: 'Listing all revisions for a file', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.revisions.list({ fileId: this.currentFile.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveRevisionList>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveRevisionList>) => {
         currentStep.status = '' + resp.data.items.length;
         this.currentRevision = resp.data.items[0];
       });
     return ro.promise;
   }
 
-  deleteRevision(): ng.IPromise<NgGapi.IDriveRevision> {
+  deleteRevision(): ng.IPromise<ngDrive.IDriveRevision> {
     var currentStep = { op: 'Deleting a revision', status: '...', data: undefined };
     this.steps.push(currentStep);
     var ro = this.DriveService.revisions.del({ fileId: this.currentFile.id, revisionId: this.currentRevision.id });
 
     ro.promise.then(
-      (resp: ng.IHttpPromiseCallbackArg<NgGapi.IDriveFile>) => {
+      (resp: ng.IHttpPromiseCallbackArg<ngDrive.IDriveFile>) => {
         currentStep.status = 'done';
       });
     return ro.promise;
